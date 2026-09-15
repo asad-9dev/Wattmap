@@ -36,7 +36,7 @@ export default async function DataPage() {
   const run = result.ok ? result.data.latestRun : null;
   return (
     <>
-      <PageHeader eyebrow="Data" title="Data sources">
+      <PageHeader title="Data sources">
         WattMap uses only official public data from the Government of Ontario. Records are stored with their source file, reporting year,
         import time, original organization and facility names, and the untouched source row.
       </PageHeader>
@@ -75,8 +75,8 @@ export default async function DataPage() {
                 />
               </div>
               <div className="grid gap-4 lg:grid-cols-2">
-                <table className="card w-full text-left text-sm">
-                  <caption className="px-4 pt-3 text-left font-medium">Records per reporting year</caption>
+                <table className="panel table-dense">
+                  <caption className="px-4 pb-2 pt-3 text-left font-semibold">Records per reporting year</caption>
                   <thead className="text-xs uppercase text-ink-muted">
                     <tr>
                       <th scope="col" className="px-4 py-2">Year</th>
@@ -92,8 +92,8 @@ export default async function DataPage() {
                     ))}
                   </tbody>
                 </table>
-                <table className="card h-fit w-full text-left text-sm">
-                  <caption className="px-4 pt-3 text-left font-medium">Facility-to-school matching</caption>
+                <table className="panel table-dense h-fit">
+                  <caption className="px-4 pb-2 pt-3 text-left font-semibold">Facility-to-school matching</caption>
                   <thead className="text-xs uppercase text-ink-muted">
                     <tr>
                       <th scope="col" className="px-4 py-2">Status</th>

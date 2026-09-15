@@ -44,12 +44,12 @@ describe("dataConfidence", () => {
     expect(dataConfidence({ ...good, matchConfidence: 0.85 }).level).toBe("Medium");
     expect(dataConfidence({ ...good, peerCount: 15 }).level).toBe("Medium");
   });
-  it("is Limited without floor area, peers, or a match — and says why", () => {
+  it("is Low without floor area, peers, or a match — and says why", () => {
     const result = dataConfidence({ ...good, latest: { ...latest, floorAreaM2: null } });
-    expect(result.level).toBe("Limited");
+    expect(result.level).toBe("Low");
     expect(result.reasons[0]?.text).toMatch(/floor-area/);
-    expect(dataConfidence({ ...good, peerCount: 4 }).level).toBe("Limited");
-    expect(dataConfidence({ ...good, matchConfidence: null }).level).toBe("Limited");
+    expect(dataConfidence({ ...good, peerCount: 4 }).level).toBe("Low");
+    expect(dataConfidence({ ...good, matchConfidence: null }).level).toBe("Low");
   });
   it("keeps informational notes without lowering confidence", () => {
     const result = dataConfidence({ ...good, hasCoordinates: false, latest: { ...latest, totalDerived: true } });

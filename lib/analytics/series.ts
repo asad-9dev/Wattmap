@@ -3,7 +3,7 @@
  * same rule as the benchmark rebuild: a combined value exists only when every part is reported.
  */
 
-import { electricityIntensity, energyUseIntensity, ghgIntensity } from "./metrics";
+import { electricityIntensity, energyUseIntensity, ghgIntensity } from "./formulas";
 import { PANDEMIC_YEARS } from "./score";
 
 export type YearlyRecordInput = {

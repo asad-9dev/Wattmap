@@ -1,58 +1,62 @@
 /**
- * Core engineering metrics. Every function returns null instead of a number whenever its inputs
- * cannot support the calculation; nothing is estimated or defaulted.
+ * WattMap analytics — the public entry point for every benchmarking calculation.
+ *
+ * Each formula lives in one focused, pure module (formulas, peers, stats, score, confidence) and
+ * is re-exported here, so pages, scripts, and tests import from a single place without any
+ * calculation being duplicated. Formulas, units, and rationale: docs/methodology.md.
+ *
+ *   EUI (GJ/m²)          = total site energy ÷ floor area            energyUseIntensity
+ *   EUI (ekWh/m²)        = EUI × 277.78                              toKwhEquivalent
+ *   GHG intensity        = kg CO₂e ÷ floor area                      ghgIntensity
+ *   Peer cohort          = same operation type + level, area 0.67–1.5× (relaxed to ≥ 20 peers)
+ *                                                                    selectPeerCohort
+ *   Percentile           = 100 × (below + ½ equal) ÷ peers           percentileRank
+ *   Opportunity Score    = 100 × (0.8 × P + 0.2 × trend factor)      opportunityScore
+ *   Energy gap (GJ)      = max(0, EUI − peer median) × floor area    energyGapToPeerMedian
+ *   Data confidence      = High / Medium / Low with reasons          dataConfidence
  */
 
-/** 1 GJ = 10⁹ J and 1 kWh = 3.6 × 10⁶ J, so 1 GJ = 277.78 kWh. */
-export const KWH_PER_GJ = 1000 / 3.6;
+export {
+  KWH_PER_GJ,
+  electricityIntensity,
+  energyGapToPeerMedian,
+  energyUseIntensity,
+  ghgIntensity,
+  naturalGasIntensity,
+  toKwhEquivalent,
+} from "./formulas";
 
-type Maybe = number | null | undefined;
+export {
+  HOURS_TOLERANCE,
+  MINIMUM_PEER_COUNT,
+  PEER_STAGES,
+  PREFERRED_PEER_COUNT,
+  selectPeers as selectPeerCohort,
+  type PeerCandidate,
+  type PeerSelection,
+  type PeerStage,
+  type SchoolLevel,
+} from "./peers";
 
-function isFiniteNumber(value: Maybe): value is number {
-  return typeof value === "number" && Number.isFinite(value);
-}
+export { linearSlope, median, medianAbsoluteDeviation, percentileRank, quantile, robustZ } from "./stats";
 
-/** quantity / floor area, valid only for a non-negative quantity and a positive area. */
-function perSquareMetre(quantity: Maybe, floorAreaM2: Maybe): number | null {
-  if (!isFiniteNumber(quantity) || quantity < 0) return null;
-  if (!isFiniteNumber(floorAreaM2) || floorAreaM2 <= 0) return null;
-  return quantity / floorAreaM2;
-}
+export {
+  MAX_TREND_YEARS,
+  MIN_TREND_YEARS,
+  PANDEMIC_YEARS,
+  opportunityScore,
+  recentTrend,
+  trendFactor,
+  type ConfidenceLevel,
+  type OpportunityScore,
+  type ScoreInputs,
+  type Trend,
+  type YearValue,
+} from "./score";
 
-/** Energy Use Intensity, GJ/m² = total site energy (GJ) / floor area (m²). */
-export function energyUseIntensity(totalSiteEnergyGj: Maybe, floorAreaM2: Maybe): number | null {
-  return perSquareMetre(totalSiteEnergyGj, floorAreaM2);
-}
-
-/**
- * Energy-equivalent kWh for a GJ value. Label results "ekWh": this is total energy expressed in
- * kWh units, not electricity consumption.
- */
-export function toKwhEquivalent(gj: Maybe): number | null {
-  return isFiniteNumber(gj) ? gj * KWH_PER_GJ : null;
-}
-
-/** GHG intensity, kg CO₂e/m². */
-export function ghgIntensity(ghgKgCo2e: Maybe, floorAreaM2: Maybe): number | null {
-  return perSquareMetre(ghgKgCo2e, floorAreaM2);
-}
-
-/** Electricity intensity, kWh/m². */
-export function electricityIntensity(electricityKwh: Maybe, floorAreaM2: Maybe): number | null {
-  return perSquareMetre(electricityKwh, floorAreaM2);
-}
-
-/** Natural gas intensity, GJ/m², from the source's reported GJ (never from converted m³). */
-export function naturalGasIntensity(naturalGasGj: Maybe, floorAreaM2: Maybe): number | null {
-  return perSquareMetre(naturalGasGj, floorAreaM2);
-}
-
-/**
- * Modeled annual energy gap to the peer median, GJ: (EUI − peer median EUI) × floor area,
- * floored at 0. A benchmarking estimate, not an audit or a guaranteed saving.
- */
-export function energyGapToPeerMedian(currentEui: Maybe, peerMedianEui: Maybe, floorAreaM2: Maybe): number | null {
-  if (!isFiniteNumber(currentEui) || !isFiniteNumber(peerMedianEui)) return null;
-  if (!isFiniteNumber(floorAreaM2) || floorAreaM2 <= 0) return null;
-  return Math.max(0, currentEui - peerMedianEui) * floorAreaM2;
-}
+export {
+  dataConfidence,
+  type ConfidenceReason,
+  type DataConfidenceInputs,
+  type DataConfidenceLevel,
+} from "./confidence";

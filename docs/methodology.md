@@ -2,6 +2,8 @@
 
 The authoritative, reader-facing version is the in-app `/methodology` page (`app/methodology/page.tsx`). This file maps each concept to the code and tests that implement it.
 
+`lib/analytics/metrics.ts` is the public entry point: it re-exports every function below, while each implementation lives in one focused module (`formulas`, `peers`, `stats`, `score`, `confidence`), so nothing is duplicated. `tests/analytics.test.ts` verifies every formula against hand-calculated values through that entry point; `tests/unit/` covers each module's edge cases.
+
 | Concept | Formula / rule | Code | Tests |
 | --- | --- | --- | --- |
 | EUI | total site energy (GJ) ÷ floor area (m²); null unless energy ≥ 0 and area > 0 | `lib/analytics/metrics.ts` `energyUseIntensity` | `tests/unit/metrics.test.ts` |
@@ -22,7 +24,7 @@ The authoritative, reader-facing version is the in-app `/methodology` page (`app
 | Anomaly labels | z < 2 typical, < 3.5 elevated, ≥ 3.5 unusually high; ≥ 10 peers | `lib/analytics/anomaly.ts` | `tests/unit/score.test.ts` |
 | Year-over-year | consecutive years only; > 30% flagged; pandemic years marked | `yearOverYearChanges` | same |
 | School-year combination | facilities matched to one school are summed per year; any missing part makes the sum unknown | `combineEntityYears`, `lib/analytics/series.ts` | `tests/unit/rebuild.test.ts`, `series.test.ts` |
-| Data confidence | limiting → Limited; caution → Medium; otherwise High; reasons always listed | `lib/analytics/confidence.ts` | `tests/unit/confidence.test.ts` |
+| Data confidence | limiting → Low; caution → Medium; otherwise High (same scale as score confidence); reasons always listed | `lib/analytics/confidence.ts` | `tests/unit/confidence.test.ts`, `tests/analytics.test.ts` |
 
 ## Raw vs normalized
 

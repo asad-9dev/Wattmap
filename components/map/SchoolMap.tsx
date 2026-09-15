@@ -92,7 +92,7 @@ export function SchoolMap({ points, metric, height = 560 }: { points: SchoolPoin
         source: "schools",
         filter: ["has", "point_count"],
         paint: {
-          "circle-color": "#0f766e",
+          "circle-color": "#047857",
           "circle-opacity": 0.8,
           "circle-radius": ["step", ["get", "point_count"], 14, 25, 18, 100, 24, 500, 30],
           "circle-stroke-width": 2,

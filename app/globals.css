@@ -4,8 +4,11 @@
 
 @layer base {
   html {
-    @apply bg-paper text-ink antialiased;
-    font-feature-settings: "cv11", "ss01";
+    @apply bg-canvas text-ink antialiased;
+  }
+
+  body {
+    font-feature-settings: "tnum" 0;
   }
 
   :focus-visible {
@@ -15,7 +18,8 @@
   h1,
   h2,
   h3 {
-    @apply tracking-tight text-ink;
+    @apply text-ink;
+    text-wrap: balance;
   }
 
   a {
@@ -34,39 +38,93 @@
 }
 
 @layer components {
+  /* max-w-7xl containment with gutters that widen by breakpoint. */
   .page {
-    @apply mx-auto w-full max-w-page px-4 sm:px-6;
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
   }
 
-  .card {
-    @apply rounded-md border border-line bg-white;
+  /* Level 1: bordered white panel. Level 2: tinted inset inside a panel. */
+  .card,
+  .panel {
+    @apply rounded-panel border border-line bg-surface shadow-panel;
+  }
+
+  .panel-head {
+    @apply flex flex-wrap items-center justify-between gap-2 border-b border-line px-4 py-3 sm:px-5;
+  }
+
+  .panel-body {
+    @apply p-4 sm:p-5;
+  }
+
+  .inset {
+    @apply rounded-md bg-canvas px-3 py-2.5;
   }
 
   .eyebrow {
-    @apply font-mono text-xs font-medium uppercase tracking-wider text-accent;
+    @apply text-sm font-medium text-accent-strong;
+  }
+
+  .label {
+    @apply text-[13px] font-medium text-ink-muted;
   }
 
   .num {
-    @apply font-mono tabular-nums;
+    @apply tabular-nums;
+    font-feature-settings: "tnum" 1;
   }
 
   .link {
     @apply text-accent-strong underline decoration-accent/40 hover:decoration-accent;
   }
 
-  /* Faint engineering-paper grid used behind page headers. */
+  .btn {
+    @apply inline-flex min-h-[40px] cursor-pointer items-center justify-center gap-2 rounded-md px-4 text-sm font-medium no-underline transition-colors duration-150;
+  }
+
+  .btn-primary {
+    @apply btn bg-accent text-white hover:bg-accent-strong;
+  }
+
+  .btn-secondary {
+    @apply btn border border-line-strong bg-surface text-ink hover:border-accent hover:text-accent-strong;
+  }
+
+  .field {
+    @apply w-full rounded-md border border-line-strong bg-surface px-2.5 py-2 text-sm text-ink placeholder:text-ink-faint focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20;
+  }
+
+  /* Dense data tables: 14px text, tabular figures, subtle zebra, sticky-friendly header. */
+  .table-dense {
+    @apply w-full border-collapse text-left text-sm;
+  }
+
+  .table-dense thead th {
+    @apply border-b border-line bg-canvas px-3 py-2 text-[13px] font-medium text-ink-muted;
+  }
+
+  .table-dense tbody tr {
+    @apply border-b border-line/70 last:border-0 hover:bg-accent-subtle/40;
+  }
+
+  .table-dense tbody th,
+  .table-dense tbody td {
+    @apply px-3 py-2.5 align-middle;
+  }
+
+  /* Faint measurement grid behind page headers — the one decorative motif. */
   .grid-motif {
-    background-image: linear-gradient(to right, rgb(15 118 110 / 0.06) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(15 118 110 / 0.06) 1px, transparent 1px);
-    background-size: 32px 32px;
+    background-image: linear-gradient(to right, rgb(4 120 87 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(4 120 87 / 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
 
   .prose-wm {
-    @apply max-w-3xl space-y-4 text-[15px] leading-7 text-ink;
+    @apply max-w-3xl space-y-4 text-base leading-7 text-ink;
   }
 
   .prose-wm h2 {
-    @apply mt-10 text-xl font-semibold;
+    @apply mt-10 scroll-mt-20 text-xl font-semibold;
   }
 
   .prose-wm h3 {
@@ -74,16 +132,15 @@
   }
 
   .prose-wm ul {
-    @apply list-disc space-y-1 pl-5;
+    @apply list-disc space-y-1.5 pl-5;
   }
 
-  .prose-wm code,
-  .formula {
+  .prose-wm code {
     @apply rounded bg-accent-subtle px-1.5 py-0.5 font-mono text-[13px] text-accent-strong;
   }
 
   .formula {
-    @apply block overflow-x-auto whitespace-pre px-4 py-3;
+    @apply block overflow-x-auto whitespace-pre rounded-md border border-accent-line/60 bg-accent-subtle px-4 py-3 font-mono text-[13px] leading-6 text-accent-strong;
   }
 }
 

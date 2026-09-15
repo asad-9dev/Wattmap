@@ -1,11 +1,12 @@
 /**
- * Data confidence for a school profile: High / Medium / Limited, always with the reasons, so a
- * visitor can see exactly why. Problems lower confidence; they are never hidden.
+ * Data confidence for a school profile: High / Medium / Low, always with the reasons, so a
+ * visitor can see exactly why. Problems lower confidence; they are never hidden. (Same scale as
+ * the Opportunity Score's confidence, so a page never shows two different vocabularies.)
  */
 
 import type { YearlyEnergy } from "./series";
 
-export type DataConfidenceLevel = "High" | "Medium" | "Limited";
+export type DataConfidenceLevel = "High" | "Medium" | "Low";
 export type ConfidenceReason = { severity: "limiting" | "caution" | "info"; text: string };
 
 export type DataConfidenceInputs = {
@@ -61,7 +62,7 @@ export function dataConfidence(input: DataConfidenceInputs): { level: DataConfid
   if (!input.hasCoordinates) reasons.push({ severity: "info", text: "No official coordinates are available, so the school is not shown on the map." });
 
   const level: DataConfidenceLevel = reasons.some((r) => r.severity === "limiting")
-    ? "Limited"
+    ? "Low"
     : reasons.some((r) => r.severity === "caution")
       ? "Medium"
       : "High";

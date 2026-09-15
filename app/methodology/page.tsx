@@ -30,13 +30,13 @@ const CONTENTS = [
 export default function MethodologyPage() {
   return (
     <>
-      <PageHeader eyebrow="Methodology" title="How WattMap works">
+      <PageHeader title="How WattMap works">
         Every number on WattMap comes from a documented calculation on public data. This page explains each step, with formulas and
         units, in plain language. The calculations live in tested, pure functions in the open source code (lib/analytics).
       </PageHeader>
-      <div className="page grid gap-10 py-10 lg:grid-cols-[14rem_1fr]">
-        <nav aria-label="On this page" className="h-fit text-sm lg:sticky lg:top-20">
-          <p className="mb-2 font-medium">On this page</p>
+      <div className="page grid gap-6 py-8 lg:grid-cols-[15rem_1fr]">
+        <nav aria-label="On this page" className="panel h-fit p-4 text-sm lg:sticky lg:top-20">
+          <p className="mb-2 font-semibold">On this page</p>
           <ol className="space-y-1.5">
             {CONTENTS.map(([id, label]) => (
               <li key={id}>
@@ -49,7 +49,8 @@ export default function MethodologyPage() {
         </nav>
 
         {/* min-w-0: a grid child otherwise grows to its widest formula line and overflows on phones. */}
-        <div className="prose-wm min-w-0">
+        <div className="panel min-w-0 px-5 py-6 sm:px-8 sm:py-8">
+        <div className="prose-wm">
           <h2 id="sources">Data sources</h2>
           <p>
             Energy and emissions come from the Government of Ontario&apos;s <em>Energy use and greenhouse gas emissions for the Broader
@@ -221,10 +222,13 @@ energy_gap (GJ) = 0                                       otherwise`}</code>
           </p>
 
           <h2 id="confidence">Confidence ratings</h2>
-          <p>Each profile shows <strong>Data confidence: High, Medium, or Limited</strong>, always with its reasons:</p>
+          <p>
+            Each profile shows <strong>Data confidence: High, Medium, or Low</strong> — the same scale as the score&apos;s confidence — always
+            with its reasons:
+          </p>
           <ul>
             <li>
-              <strong>Limited</strong>: no confident facility match, missing floor area or total energy, a negative value, unrecognized units,
+              <strong>Low</strong>: no confident facility match, missing floor area or total energy, a negative value, unrecognized units,
               or fewer than 10 peers.
             </li>
             <li>
@@ -260,6 +264,7 @@ energy_gap (GJ) = 0                                       otherwise`}</code>
             wasteful or inefficient. WattMap is independent and is not affiliated with or endorsed by the Government of Ontario or any school
             board.
           </p>
+        </div>
         </div>
       </div>
     </>

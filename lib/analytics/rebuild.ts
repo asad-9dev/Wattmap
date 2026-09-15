@@ -9,7 +9,7 @@
 
 import { peerAnomaly } from "./anomaly";
 import { operationCategory, type OperationCategory } from "./category";
-import { electricityIntensity, energyGapToPeerMedian, energyUseIntensity, ghgIntensity } from "./metrics";
+import { electricityIntensity, energyGapToPeerMedian, energyUseIntensity, ghgIntensity } from "./formulas";
 import { selectPeers, type PeerCandidate, type SchoolLevel } from "./peers";
 import { opportunityScore, recentTrend, type YearValue } from "./score";
 import { percentileRank, quantile } from "./stats";

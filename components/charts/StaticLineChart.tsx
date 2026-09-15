@@ -31,25 +31,25 @@ export function StaticLineChart({ points, unit, digits = 0, label }: { points: P
       )}
       {ticks.map((t) => (
         <g key={t}>
-          <line x1={PAD.left} x2={WIDTH - PAD.right} y1={y(t)} y2={y(t)} stroke="#e4e4e0" />
-          <text x={PAD.left - 6} y={y(t) + 4} textAnchor="end" fontSize={11} fill="#565d66">
+          <line x1={PAD.left} x2={WIDTH - PAD.right} y1={y(t)} y2={y(t)} stroke="#dce2de" />
+          <text x={PAD.left - 6} y={y(t) + 4} textAnchor="end" fontSize={11} fill="#56615b">
             {formatNumber(t, digits > 1 ? 2 : 0)}
           </text>
         </g>
       ))}
-      <text x={12} y={PAD.top + 4} fontSize={11} fill="#565d66">
+      <text x={12} y={PAD.top + 4} fontSize={11} fill="#56615b">
         {unit}
       </text>
       {segments
         .filter((s) => s.length > 0)
         .map((segment, i) => (
-          <polyline key={i} points={segment.map((p) => `${x(p.year)},${y(p.value!)}`).join(" ")} fill="none" stroke="#0f766e" strokeWidth={2} />
+          <polyline key={i} points={segment.map((p) => `${x(p.year)},${y(p.value!)}`).join(" ")} fill="none" stroke="#047857" strokeWidth={2} />
         ))}
       {valid.map((p) => (
-        <circle key={p.year} cx={x(p.year)} cy={y(p.value)} r={3} fill="#0f766e" />
+        <circle key={p.year} cx={x(p.year)} cy={y(p.value)} r={3} fill="#047857" />
       ))}
       {points.map((p) => (
-        <text key={p.year} x={x(p.year)} y={HEIGHT - 8} textAnchor="middle" fontSize={10} fill="#565d66">
+        <text key={p.year} x={x(p.year)} y={HEIGHT - 8} textAnchor="middle" fontSize={10} fill="#56615b">
           {String(p.year).slice(2)}
         </text>
       ))}

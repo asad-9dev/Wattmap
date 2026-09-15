@@ -3,7 +3,7 @@
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { formatNumber } from "@/lib/format";
 
-export const SERIES_COLORS = ["#0f766e", "#b45309", "#2f6f9f", "#7c3aed"];
+export const SERIES_COLORS = ["#047857", "#b45309", "#2f6f9f", "#7c3aed"];
 const DASHES = ["", "6 3", "2 3", "8 3 2 3"];
 
 /** One EUI line per school; distinct dash patterns so the series never depend on colour alone. */
@@ -20,9 +20,9 @@ export function CompareChart({ schools }: { schools: { name: string; points: { y
     <div aria-hidden="true" className="h-72">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={rows} margin={{ top: 8, right: 12, bottom: 4, left: 4 }}>
-          <CartesianGrid stroke="#e4e4e0" vertical={false} />
-          <XAxis dataKey="year" tick={{ fontSize: 12, fill: "#565d66" }} />
-          <YAxis width={56} domain={[0, "auto"]} tickFormatter={(v: number) => formatNumber(v, 2)} tick={{ fontSize: 12, fill: "#565d66" }} label={{ value: "GJ/m²", angle: -90, position: "insideLeft", fontSize: 12, fill: "#565d66" }} />
+          <CartesianGrid stroke="#dce2de" vertical={false} />
+          <XAxis dataKey="year" tick={{ fontSize: 12, fill: "#56615b" }} />
+          <YAxis width={56} domain={[0, "auto"]} tickFormatter={(v: number) => formatNumber(v, 2)} tick={{ fontSize: 12, fill: "#56615b" }} label={{ value: "GJ/m²", angle: -90, position: "insideLeft", fontSize: 12, fill: "#56615b" }} />
           <Tooltip formatter={(v) => `${formatNumber(Number(v), 2)} GJ/m²`} labelFormatter={(y) => `Reporting year ${y}`} />
           <Legend wrapperStyle={{ fontSize: 12 }} />
           {schools.map((s, i) => (

@@ -6,8 +6,9 @@
 app/                    Next.js routes (server components) and route handlers (app/api/*)
 components/             UI: site chrome, charts (Recharts + SVG), map (MapLibre), search, primitives
 lib/
-  analytics/            Pure, unit-tested calculations: metrics, stats, peers, score, anomaly,
-                        confidence, series, histogram, rebuild (entity-year benchmarking)
+  analytics/            Pure, unit-tested calculations. metrics.ts is the public entry point that
+                        re-exports formulas (EUI, intensities, gap), peers, stats, score, and
+                        confidence; plus anomaly, series, histogram, rebuild (entity-year benchmarking)
   db/                   Drizzle client (Supabase or PGlite), queries/ (read models), rebuild (I/O)
   search/               In-memory grouped autocomplete
   validation/           Zod schemas for query parameters

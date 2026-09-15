@@ -51,6 +51,12 @@ export function formatArea(m2: Maybe): string {
   return valid(m2) ? `${formatNumber(m2, 0)} m²` : MISSING;
 }
 
+/** Split "1,240 GJ" into { value: "1,240", unit: "GJ" } so the unit can be typeset smaller. */
+export function splitUnit(formatted: string): { value: string; unit: string } {
+  const match = /^([+−-]?[\d,.]+)\s+(.+)$/.exec(formatted);
+  return match ? { value: match[1]!, unit: match[2]! } : { value: formatted, unit: "" };
+}
+
 export function ordinal(n: number): string {
   const rounded = Math.round(n);
   const lastTwo = rounded % 100;
