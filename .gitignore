@@ -1,0 +1,35 @@
+# dependencies
+node_modules/
+
+# next.js
+.next/
+out/
+*.tsbuildinfo
+
+# env files — secrets live here (including .env.txt). Only the example is committed.
+.env*
+!.env.example
+
+# python
+.venv/
+__pycache__/
+*.pyc
+
+# source data archives and pipeline outputs (large, re-downloadable)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/local-pglite/
+
+# test output
+test-results/
+playwright-report/
+
+# local tooling (machine-specific paths)
+.claude/
+
+# misc
+.DS_Store
+Thumbs.db
+npm-debug.log*

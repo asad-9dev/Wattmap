@@ -1,0 +1,6 @@
+pandas>=2.3.3,<4
+numpy>=2.3.3,<3
+python-dotenv>=1.0.1,<2
+supabase>=2.15,<3
+# pandas needs openpyxl to read the .xlsx workbooks Ontario publishes.
+openpyxl>=3.1,<4

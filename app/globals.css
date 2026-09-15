@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply bg-paper text-ink antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  :focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-accent;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply tracking-tight text-ink;
+  }
+
+  a {
+    @apply underline-offset-4;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .page {
+    @apply mx-auto w-full max-w-page px-4 sm:px-6;
+  }
+
+  .card {
+    @apply rounded-md border border-line bg-white;
+  }
+
+  .eyebrow {
+    @apply font-mono text-xs font-medium uppercase tracking-wider text-accent;
+  }
+
+  .num {
+    @apply font-mono tabular-nums;
+  }
+
+  .link {
+    @apply text-accent-strong underline decoration-accent/40 hover:decoration-accent;
+  }
+
+  /* Faint engineering-paper grid used behind page headers. */
+  .grid-motif {
+    background-image: linear-gradient(to right, rgb(15 118 110 / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(15 118 110 / 0.06) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .prose-wm {
+    @apply max-w-3xl space-y-4 text-[15px] leading-7 text-ink;
+  }
+
+  .prose-wm h2 {
+    @apply mt-10 text-xl font-semibold;
+  }
+
+  .prose-wm h3 {
+    @apply mt-6 text-base font-semibold;
+  }
+
+  .prose-wm ul {
+    @apply list-disc space-y-1 pl-5;
+  }
+
+  .prose-wm code,
+  .formula {
+    @apply rounded bg-accent-subtle px-1.5 py-0.5 font-mono text-[13px] text-accent-strong;
+  }
+
+  .formula {
+    @apply block overflow-x-auto whitespace-pre px-4 py-3;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  html {
+    background: white;
+  }
+}
