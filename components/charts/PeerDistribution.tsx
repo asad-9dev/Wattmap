@@ -15,7 +15,8 @@ const PAD = 24;
 
 /**
  * Horizontal strip of every peer's EUI with the interquartile box, the median, and the target.
- * Plain SVG: renders on the server, scales with its container, and carries a text description.
+ * Plain SVG with theme classes: renders on the server, scales with its container, prints in the
+ * light palette, and carries a text description.
  */
 export function PeerDistribution({ peerEuis, target, q25, median, q75, targetLabel = "This school" }: Props) {
   const values = [...peerEuis, target];
@@ -28,28 +29,28 @@ export function PeerDistribution({ peerEuis, target, q25, median, q75, targetLab
   return (
     <figure className="space-y-2">
       <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} className="h-auto w-full" role="img" aria-label={description}>
-        <line x1={PAD} x2={WIDTH - PAD} y1={70} y2={70} stroke="#dce2de" />
+        <line x1={PAD} x2={WIDTH - PAD} y1={70} y2={70} className="stroke-line" />
         {q25 !== null && q75 !== null && (
-          <rect x={x(q25)} y={52} width={Math.max(1, x(q75) - x(q25))} height={36} fill="#ecfdf5" stroke="#047857" strokeOpacity={0.4} />
+          <rect x={x(q25)} y={52} width={Math.max(1, x(q75) - x(q25))} height={36} className="fill-accent-subtle stroke-accent/40" />
         )}
         {peerEuis.map((value, i) => (
-          <line key={i} x1={x(value)} x2={x(value)} y1={58} y2={82} stroke="#047857" strokeOpacity={0.45} strokeWidth={1.5} />
+          <line key={i} x1={x(value)} x2={x(value)} y1={58} y2={82} className="stroke-accent/45" strokeWidth={1.5} />
         ))}
         {median !== null && (
           <>
-            <line x1={x(median)} x2={x(median)} y1={46} y2={94} stroke="#14201a" strokeWidth={2} />
-            <text x={x(median)} y={40} textAnchor="middle" fontSize={12} fill="#14201a">
+            <line x1={x(median)} x2={x(median)} y1={46} y2={94} className="stroke-ink" strokeWidth={2} />
+            <text x={x(median)} y={40} textAnchor="middle" fontSize={12} className="fill-ink">
               Peer median
             </text>
           </>
         )}
-        <path d={`M ${x(target)} 96 l -6 10 h 12 z`} fill="#b45309" />
-        <line x1={x(target)} x2={x(target)} y1={48} y2={96} stroke="#b45309" strokeWidth={2.5} />
-        <text x={Math.min(WIDTH - PAD, Math.max(PAD, x(target)))} y={20} textAnchor="middle" fontSize={12} fontWeight={600} fill="#b45309">
+        <path d={`M ${x(target)} 96 l -6 10 h 12 z`} className="fill-signal-high" />
+        <line x1={x(target)} x2={x(target)} y1={48} y2={96} className="stroke-signal-high" strokeWidth={2.5} />
+        <text x={Math.min(WIDTH - PAD, Math.max(PAD, x(target)))} y={20} textAnchor="middle" fontSize={12} fontWeight={600} className="fill-signal-high">
           {targetLabel}
         </text>
         {ticks.map((t) => (
-          <text key={t} x={x(t)} y={HEIGHT - 2} textAnchor="middle" fontSize={11} fill="#6b756f">
+          <text key={t} x={x(t)} y={HEIGHT - 2} textAnchor="middle" fontSize={11} className="fill-ink-faint">
             {t.toFixed(2)}
           </text>
         ))}

@@ -24,7 +24,7 @@ export function InfoTip({ label, children }: { label: string; children: ReactNod
         <span
           id={id}
           role="note"
-          className="absolute left-1/2 top-7 z-30 w-72 max-w-[80vw] -translate-x-1/2 rounded-md border border-line bg-white p-3 text-left text-[13px] font-normal normal-case leading-5 tracking-normal text-ink shadow-lg"
+          className="absolute left-1/2 top-7 z-30 w-72 max-w-[80vw] -translate-x-1/2 rounded-md border border-line bg-surface p-3 text-left text-[13px] font-normal normal-case leading-5 tracking-normal text-ink shadow-lg"
         >
           <span className="mb-1 block font-semibold">{label}</span>
           {children}

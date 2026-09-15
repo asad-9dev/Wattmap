@@ -46,7 +46,7 @@ export function MapExplorer({ years, defaultYear }: { years: number[]; defaultYe
     [all, level, board, region, city],
   );
 
-  const select = "w-full rounded border border-line bg-white px-2 py-1.5 text-sm";
+  const select = "w-full rounded border border-line bg-surface px-2 py-1.5 text-sm";
   return (
     <div className="grid gap-6 lg:grid-cols-[16rem_1fr]">
       <form className="card h-fit space-y-3 p-4 text-sm" aria-label="Map filters" onSubmit={(e) => e.preventDefault()}>

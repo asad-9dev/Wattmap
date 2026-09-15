@@ -87,8 +87,13 @@ export default async function ComparePage({ searchParams }: { searchParams: { sc
               <h2 id="compare-trend" className="font-semibold">
                 Energy intensity over time
               </h2>
-              <CompareChart schools={views.map(({ profile }) => ({ name: profile.school.name, points: profile.series.map((s) => ({ year: s.year, eui: s.eui })) }))} />
-              <p className="text-sm text-ink-muted">Gaps are years without a report. 2020–2021 were pandemic-affected for every school.</p>
+              <p className="text-sm text-ink-muted">Switch to GHG intensity to compare emissions per m². Both are per-area measures, so building size does not dominate.</p>
+              <CompareChart
+                schools={views.map(({ profile }) => ({
+                  name: profile.school.name,
+                  points: profile.series.map((s) => ({ year: s.year, eui: s.eui, ghgIntensity: s.ghgIntensity })),
+                }))}
+              />
             </section>
           </>
         )}

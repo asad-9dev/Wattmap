@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { siteUrl } from "@/lib/site";
+import { THEME_INIT_SCRIPT } from "@/lib/theme";
 import "./globals.css";
 
 // IBM Plex: drawn for engineering interfaces, with true tabular figures for data columns.
@@ -26,15 +27,24 @@ export const metadata: Metadata = {
   twitter: { card: "summary" },
 };
 
-export const viewport: Viewport = { themeColor: "#f6f7f6" };
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f6f7f6" },
+    { media: "(prefers-color-scheme: dark)", color: "#111a16" },
+  ],
+};
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en-CA" className={`${sans.variable} ${mono.variable}`}>
+    // The init script sets the theme class before React hydrates, so the attribute may differ.
+    <html lang="en-CA" className={`${sans.variable} ${mono.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body className="flex min-h-dvh flex-col font-sans">
         <a
           href="#main"
-          className="sr-only z-50 rounded bg-accent px-3 py-2 text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+          className="sr-only z-50 rounded bg-accent px-3 py-2 text-accent-contrast focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
         >
           Skip to content
         </a>

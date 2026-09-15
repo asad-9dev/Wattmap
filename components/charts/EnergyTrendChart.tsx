@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, ReferenceArea, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { tooltipStyles, useChartColors } from "@/components/theme/useTheme";
 import { formatNumber } from "@/lib/format";
 
 export type TrendRow = {
@@ -64,6 +65,7 @@ export function EnergyTrendChart({
   metrics?: MetricKey[];
   height?: number;
 }) {
+  const colors = useChartColors();
   const available = metrics.filter((key) => rows.some((r) => valueOf(r, key) !== null));
   const [selected, setSelected] = useState<MetricKey | undefined>(available[0]);
   const key = selected && available.includes(selected) ? selected : available[0];
@@ -101,20 +103,25 @@ export function EnergyTrendChart({
       <div aria-hidden="true" style={{ height }}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 12, right: 12, bottom: 4, left: 4 }}>
-            <CartesianGrid stroke="#dce2de" vertical={false} />
-            <XAxis dataKey="year" tick={{ fontSize: 12, fill: "#56615b" }} tickMargin={6} />
+            <CartesianGrid stroke={colors.grid} vertical={false} />
+            <XAxis dataKey="year" tick={{ fontSize: 12, fill: colors.muted }} stroke={colors.lineStrong} tickMargin={6} />
             <YAxis
               width={64}
-              tick={{ fontSize: 12, fill: "#56615b" }}
+              tick={{ fontSize: 12, fill: colors.muted }}
+              stroke={colors.lineStrong}
               tickFormatter={(v: number) => formatNumber(v, metric.digits > 1 ? 2 : 0)}
               domain={[0, "auto"]}
-              label={{ value: metric.unit, angle: -90, position: "insideLeft", fontSize: 12, fill: "#56615b" }}
+              label={{ value: metric.unit, angle: -90, position: "insideLeft", fontSize: 12, fill: colors.muted }}
             />
             {hasPandemic && (
-              <ReferenceArea x1={2020} x2={2021} fill="#b45309" fillOpacity={0.07} label={{ value: "Pandemic-affected", position: "insideTop", fontSize: 11, fill: "#b45309" }} />
+              <ReferenceArea x1={2020} x2={2021} fill={colors.signalHigh} fillOpacity={0.08} label={{ value: "Pandemic-affected", position: "insideTop", fontSize: 11, fill: colors.signalHigh }} />
             )}
-            <Tooltip formatter={(v) => [`${formatNumber(Number(v), metric.digits)} ${metric.unit}`, metric.label]} labelFormatter={(y) => `Reporting year ${y}`} />
-            <Line type="linear" dataKey="value" stroke="#047857" strokeWidth={2} dot={{ r: 3, fill: "#047857" }} activeDot={{ r: 5 }} connectNulls={false} isAnimationActive={false} />
+            <Tooltip
+              formatter={(v) => [`${formatNumber(Number(v), metric.digits)} ${metric.unit}`, metric.label]}
+              labelFormatter={(y) => `Reporting year ${y}`}
+              {...tooltipStyles(colors)}
+            />
+            <Line type="linear" dataKey="value" stroke={colors.accent} strokeWidth={2} dot={{ r: 3, fill: colors.accent }} activeDot={{ r: 5 }} connectNulls={false} isAnimationActive={false} />
           </LineChart>
         </ResponsiveContainer>
       </div>

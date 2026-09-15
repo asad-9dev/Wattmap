@@ -48,7 +48,7 @@ test("map loads schools and offers a text alternative", async ({ page }) => {
   await page.goto("/map");
   await expect(page.getByText(/[\d,]+ schools shown/)).toBeVisible({ timeout: 30_000 });
   await expect(page.locator("canvas.maplibregl-canvas")).toBeVisible();
-  await expect(page.getByText("Cluster (click to zoom)")).toBeVisible();
+  await expect(page.getByText("Cluster (select to zoom)")).toBeVisible();
   await page.getByLabel("School level").selectOption("secondary");
   await expect(page.getByText(/[\d,]+ schools shown/)).toBeVisible();
   await expect(page.getByRole("link", { name: /browse schools as a table/i })).toBeVisible();

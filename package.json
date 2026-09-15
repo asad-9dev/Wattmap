@@ -17,7 +17,7 @@
     "db:studio": "drizzle-kit studio",
     "data:fetch": "python scripts/ingest/fetch_sources.py",
     "data:ingest": "python scripts/ingest/run.py",
-    "analytics:rebuild": "tsx scripts/analytics/rebuild.ts",
+    "analytics:rebuild": "tsx scripts/admin/rebuild-analytics.ts",
     "db:seed-local": "tsx scripts/dev/seed-local.ts",
     "test:ingest": "python -m unittest discover -s tests/ingest",
     "admin:unresolved": "python scripts/admin/list_unresolved.py",

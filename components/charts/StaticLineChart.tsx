@@ -27,29 +27,35 @@ export function StaticLineChart({ points, unit, digits = 0, label }: { points: P
   return (
     <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} className="h-auto w-full" role="img" aria-label={summary}>
       {firstYear <= 2021 && lastYear >= 2020 && (
-        <rect x={x(Math.max(2020, firstYear)) - 6} y={PAD.top} width={x(Math.min(2021, lastYear)) - x(Math.max(2020, firstYear)) + 12} height={HEIGHT - PAD.top - PAD.bottom} fill="#b45309" fillOpacity={0.07} />
+        <rect
+          x={x(Math.max(2020, firstYear)) - 6}
+          y={PAD.top}
+          width={x(Math.min(2021, lastYear)) - x(Math.max(2020, firstYear)) + 12}
+          height={HEIGHT - PAD.top - PAD.bottom}
+          className="fill-signal-high/10"
+        />
       )}
       {ticks.map((t) => (
         <g key={t}>
-          <line x1={PAD.left} x2={WIDTH - PAD.right} y1={y(t)} y2={y(t)} stroke="#dce2de" />
-          <text x={PAD.left - 6} y={y(t) + 4} textAnchor="end" fontSize={11} fill="#56615b">
+          <line x1={PAD.left} x2={WIDTH - PAD.right} y1={y(t)} y2={y(t)} className="stroke-line" />
+          <text x={PAD.left - 6} y={y(t) + 4} textAnchor="end" fontSize={11} className="fill-ink-muted">
             {formatNumber(t, digits > 1 ? 2 : 0)}
           </text>
         </g>
       ))}
-      <text x={12} y={PAD.top + 4} fontSize={11} fill="#56615b">
+      <text x={12} y={PAD.top + 4} fontSize={11} className="fill-ink-muted">
         {unit}
       </text>
       {segments
         .filter((s) => s.length > 0)
         .map((segment, i) => (
-          <polyline key={i} points={segment.map((p) => `${x(p.year)},${y(p.value!)}`).join(" ")} fill="none" stroke="#047857" strokeWidth={2} />
+          <polyline key={i} points={segment.map((p) => `${x(p.year)},${y(p.value!)}`).join(" ")} fill="none" className="stroke-accent" strokeWidth={2} />
         ))}
       {valid.map((p) => (
-        <circle key={p.year} cx={x(p.year)} cy={y(p.value)} r={3} fill="#047857" />
+        <circle key={p.year} cx={x(p.year)} cy={y(p.value)} r={3} className="fill-accent" />
       ))}
       {points.map((p) => (
-        <text key={p.year} x={x(p.year)} y={HEIGHT - 8} textAnchor="middle" fontSize={10} fill="#56615b">
+        <text key={p.year} x={x(p.year)} y={HEIGHT - 8} textAnchor="middle" fontSize={10} className="fill-ink-muted">
           {String(p.year).slice(2)}
         </text>
       ))}

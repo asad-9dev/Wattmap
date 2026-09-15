@@ -22,6 +22,8 @@ WattMap ingests every English BPS report from 2011 onward, maps each layout onto
 - **Compare** 2–4 schools side by side
 - **Board** and **Ontario** overviews that keep provincial totals separate from benchmarked schools
 - **Printable report** for each school
+- **Eco Club toolkit** (`/toolkit`): how students can read a profile, questions for facility staff, safe investigations
+- **Light, dark, and system themes**, switched from the header; printed reports always use the light palette
 - **Methodology** and **Data sources** pages describing exactly what is implemented
 
 ## Architecture
@@ -92,7 +94,8 @@ cp .env.example .env.local                                   # then fill in the 
 | `NEXT_PUBLIC_SUPABASE_URL` | Ingestion pipeline | Project URL (not secret). |
 | `SUPABASE_SERVICE_ROLE_KEY` | Ingestion pipeline | Bypasses Row Level Security. Never expose to the browser. |
 | `NEXT_PUBLIC_SITE_URL` | Metadata, sitemap | Production URL, e.g. `https://wattmap.ca`. |
-| `NEXT_PUBLIC_MAP_STYLE_URL` | Map | Optional MapLibre style; defaults to OpenFreeMap Positron. |
+| `NEXT_PUBLIC_MAP_STYLE_URL` | Map | Optional MapLibre style for the light theme; defaults to OpenFreeMap Positron. |
+| `NEXT_PUBLIC_MAP_STYLE_URL_DARK` | Map | Optional MapLibre style for the dark theme; defaults to OpenFreeMap Dark. |
 
 ### Database setup
 
@@ -112,6 +115,16 @@ npm run admin:validate      # check database invariants
 ```
 
 `python scripts/ingest/run.py --dry-run` runs every stage without writing. Each run writes `data/processed/ingestion-summary.json`, `match-review.csv`, and `rejected-rows.csv`. Re-running is idempotent. See [docs/ingestion.md](docs/ingestion.md) and [docs/matching.md](docs/matching.md).
+
+### Admin utilities (`scripts/admin/`)
+
+| Command | What it does |
+| --- | --- |
+| `npm run analytics:rebuild` | Recompute peer groups, percentiles, trends, and scores (`rebuild-analytics.ts`) |
+| `npm run admin:unresolved` | List facilities awaiting a matching decision, current ones first |
+| `npm run admin:approve -- <key> --school <number> --note "…"` | Record a verified match (or `--no-match`) that survives re-ingestion |
+| `npm run admin:validate` | Check database invariants; exits non-zero on failure |
+| `npm run admin:stats` | Export the provincial statistics shown on the site as JSON |
 
 ### Local mode (no Supabase needed)
 

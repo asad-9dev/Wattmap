@@ -9,8 +9,8 @@ export const NAV_LINKS = [
   { href: "/map", label: "Map" },
   { href: "/compare", label: "Compare" },
   { href: "/ontario", label: "Ontario" },
+  { href: "/toolkit", label: "Toolkit" },
   { href: "/methodology", label: "Methodology" },
-  { href: "/data", label: "Data" },
   { href: "/about", label: "About" },
 ] as const;
 

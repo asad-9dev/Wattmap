@@ -9,7 +9,7 @@
 ## App (Vercel)
 
 1. Import the repository; framework preset Next.js; build command `npm run build`.
-2. Environment variables: `DATABASE_URL` (server-only), `NEXT_PUBLIC_SITE_URL` (canonical URL for metadata and the sitemap), optionally `NEXT_PUBLIC_MAP_STYLE_URL`.
+2. Environment variables: `DATABASE_URL` (server-only), `NEXT_PUBLIC_SITE_URL` (canonical URL for metadata and the sitemap), optionally `NEXT_PUBLIC_MAP_STYLE_URL` and `NEXT_PUBLIC_MAP_STYLE_URL_DARK` (map styles for the light and dark themes).
 3. Pages read through `unstable_cache` for one hour. Cache keys include the deployed commit (`VERCEL_GIT_COMMIT_SHA`) and a hash of `DATABASE_URL`, so a redeploy always starts from fresh results. After loading new data, either wait an hour or redeploy. Locally, delete `.next/cache` after re-ingesting if you need fresh pages immediately.
 
 ## Security

@@ -17,8 +17,8 @@ lib/
 drizzle/                schema.ts and generated SQL migrations
 scripts/
   ingest/               Python ETL: fetch_sources, inspect_sources, run, columns, normalize, matching, load
-  analytics/rebuild.ts  Recompute peer_metrics
-  admin/                list_unresolved, approve_match, validate-db, export-stats
+  admin/                rebuild-analytics (recompute peer_metrics), list_unresolved,
+                        approve_match, validate-db, export-stats
   dev/seed-local.ts     Load a pipeline export into local PGlite
 tests/                  unit/, integration/ (PGlite), ingest/ (Python), e2e/ (Playwright)
 data/raw|processed      Downloaded sources and pipeline outputs (git-ignored)
@@ -40,3 +40,5 @@ data/raw|processed      Downloaded sources and pipeline outputs (git-ignored)
 - **Row Level Security on, no policies.** Supabase's auto-generated API exposes nothing; the app uses a direct Postgres connection and the pipeline uses the service-role key.
 - **Search in memory.** About 6,000 short strings; a Dice-coefficient matcher avoids depending on `pg_trgm`/`unaccent`, which a default Supabase project does not enable.
 - **Local mode.** `DATABASE_URL=pglite:<dir>` runs the whole app on an embedded Postgres loaded from a real pipeline export — used for development and end-to-end tests without secrets.
+- **Theming.** Every colour is a CSS variable (`app/globals.css`) consumed by Tailwind tokens, so light and dark swap the whole palette; the dark palette applies on screens only, so reports always print light. A tiny inline script (`lib/theme.ts`) applies the saved or system theme before first paint. Recharts and MapLibre read the same variables through `components/theme/useTheme.ts`; server-rendered SVG charts use theme classes directly. The header switch offers light, dark, and system.
+- **Eco Club toolkit.** `/toolkit` is static guidance for students (reading a profile, questions for staff, non-invasive investigations, a prominent safety section), linked from the header and footer.

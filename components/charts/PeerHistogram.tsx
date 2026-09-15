@@ -1,6 +1,7 @@
 "use client";
 
 import { Bar, BarChart, CartesianGrid, ReferenceArea, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { tooltipStyles, useChartColors } from "@/components/theme/useTheme";
 import { histogram } from "@/lib/analytics/histogram";
 import { formatNumber } from "@/lib/format";
 
@@ -12,6 +13,7 @@ type Props = { peerEuis: number[]; target: number; q25: number | null; median: n
  * readers: the surrounding panel states the same facts in text.
  */
 export function PeerHistogram({ peerEuis, target, q25, median, q75 }: Props) {
+  const colors = useChartColors();
   const bins = histogram([...peerEuis, target], 18);
   const rows = bins.map((bin) => ({
     mid: (bin.from + bin.to) / 2,
@@ -22,27 +24,29 @@ export function PeerHistogram({ peerEuis, target, q25, median, q75 }: Props) {
     <div aria-hidden="true" className="h-56">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={rows} margin={{ top: 18, right: 8, bottom: 18, left: 0 }} barCategoryGap={1}>
-          <CartesianGrid vertical={false} stroke="#dce2de" />
-          {q25 !== null && q75 !== null && <ReferenceArea x1={q25} x2={q75} fill="#d1fae5" fillOpacity={0.7} ifOverflow="extendDomain" />}
+          <CartesianGrid vertical={false} stroke={colors.grid} />
+          {q25 !== null && q75 !== null && <ReferenceArea x1={q25} x2={q75} fill={colors.band} fillOpacity={0.7} ifOverflow="extendDomain" />}
           <XAxis
             dataKey="mid"
             type="number"
             domain={[0, "dataMax"]}
             tickFormatter={(v: number) => formatNumber(v, 1)}
-            tick={{ fontSize: 12, fill: "#56615b" }}
-            label={{ value: "Energy Use Intensity (GJ/m²)", position: "insideBottom", offset: -12, fontSize: 12, fill: "#56615b" }}
+            tick={{ fontSize: 12, fill: colors.muted }}
+            stroke={colors.lineStrong}
+            label={{ value: "Energy Use Intensity (GJ/m²)", position: "insideBottom", offset: -12, fontSize: 12, fill: colors.muted }}
           />
-          <YAxis allowDecimals={false} width={36} tick={{ fontSize: 12, fill: "#56615b" }} />
+          <YAxis allowDecimals={false} width={36} tick={{ fontSize: 12, fill: colors.muted }} stroke={colors.lineStrong} />
           <Tooltip
-            cursor={{ fill: "rgba(4,120,87,0.06)" }}
+            cursor={{ fill: colors.cursor }}
             formatter={(value) => [`${value} schools`, "Peers"]}
             labelFormatter={(_, payload) => `${payload?.[0]?.payload?.label ?? ""} GJ/m²`}
+            {...tooltipStyles(colors)}
           />
-          <Bar dataKey="count" fill="#059669" fillOpacity={0.85} radius={[2, 2, 0, 0]} isAnimationActive={false} />
+          <Bar dataKey="count" fill={colors.bar} fillOpacity={0.85} radius={[2, 2, 0, 0]} isAnimationActive={false} />
           {median !== null && (
-            <ReferenceLine x={median} stroke="#14201a" strokeDasharray="4 3" label={{ value: "Median", position: "top", fontSize: 11, fill: "#14201a" }} />
+            <ReferenceLine x={median} stroke={colors.ink} strokeDasharray="4 3" label={{ value: "Median", position: "top", fontSize: 11, fill: colors.ink }} />
           )}
-          <ReferenceLine x={target} stroke="#b45309" strokeWidth={2.5} label={{ value: "This school", position: "top", fontSize: 11, fontWeight: 600, fill: "#b45309" }} />
+          <ReferenceLine x={target} stroke={colors.signalHigh} strokeWidth={2.5} label={{ value: "This school", position: "top", fontSize: 11, fontWeight: 600, fill: colors.signalHigh }} />
         </BarChart>
       </ResponsiveContainer>
     </div>

@@ -3,8 +3,10 @@
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Map as MapLibreMap, NavigationControl, Popup, type GeoJSONSource, type MapLayerMouseEvent } from "maplibre-gl";
 import { useEffect, useMemo, useRef } from "react";
+import { readThemeColors, type ChartColors } from "@/components/theme/useTheme";
 import { formatEui, formatGhgIntensity, formatPercentile } from "@/lib/format";
-import { bandsFor, NO_VALUE_COLOR, type MapMetric } from "./metricScale";
+import type { ResolvedTheme } from "@/lib/theme";
+import { bandsFor, type MapMetric } from "./metricScale";
 
 export type SchoolPoint = {
   slug: string;
@@ -18,10 +20,14 @@ export type SchoolPoint = {
   score: number | null;
   ghgIntensity: number | null;
   level?: string | null;
+  region?: string | null;
 };
 
 // OpenFreeMap serves OpenStreetMap vector tiles without an API key; override per deployment.
-const STYLE_URL = process.env.NEXT_PUBLIC_MAP_STYLE_URL ?? "https://tiles.openfreemap.org/styles/positron";
+const STYLE_URLS: Record<ResolvedTheme, string> = {
+  light: process.env.NEXT_PUBLIC_MAP_STYLE_URL ?? "https://tiles.openfreemap.org/styles/positron",
+  dark: process.env.NEXT_PUBLIC_MAP_STYLE_URL_DARK ?? "https://tiles.openfreemap.org/styles/dark",
+};
 const ONTARIO_CENTER: [number, number] = [-80.5, 45.5];
 
 function toGeoJson(points: SchoolPoint[], metric: MapMetric): GeoJSON.FeatureCollection {
@@ -35,47 +41,55 @@ function toGeoJson(points: SchoolPoint[], metric: MapMetric): GeoJSON.FeatureCol
   };
 }
 
-function colorExpression(metric: MapMetric, points: SchoolPoint[]) {
+function colorExpression(metric: MapMetric, points: SchoolPoint[], colors: ChartColors) {
   const values = points.map((p) => p[metric]).filter((v): v is number => v !== null);
-  const [low, mid, high] = bandsFor(metric, values);
-  return ["case", ["<", ["get", "value"], 0], NO_VALUE_COLOR, ["step", ["get", "value"], low!.color, mid!.min, mid!.color, high!.min, high!.color]];
+  const [, mid, high] = bandsFor(metric, values);
+  return [
+    "case",
+    ["<", ["get", "value"], 0],
+    colors.lineStrong,
+    ["step", ["get", "value"], colors.signalLow, mid!.min, colors.signalMid, high!.min, colors.signalHigh],
+  ];
 }
 
 /** Popup content built with DOM APIs (never innerHTML) because names come from source data. */
 function popupContent(p: SchoolPoint): HTMLElement {
   const root = document.createElement("div");
-  root.className = "space-y-1 text-[13px] leading-5 text-ink";
+  root.className = "space-y-1 text-[13px] leading-5";
   const title = document.createElement("p");
   title.className = "font-semibold";
   title.textContent = p.name;
   const meta = document.createElement("p");
   meta.className = "text-ink-muted";
-  meta.textContent = [p.boardName, p.city].filter(Boolean).join(" · ");
+  meta.textContent = p.city ? `${p.boardName}, ${p.city}` : p.boardName;
   const stats = document.createElement("p");
-  stats.textContent = `EUI ${formatEui(p.eui)} · ${p.score !== null ? `Score ${p.score}/100` : "No score"}`;
+  stats.textContent = `EUI ${formatEui(p.eui)}. ${p.score !== null ? `Score ${p.score} of 100.` : "No score."}`;
   const extra = document.createElement("p");
   extra.className = "text-ink-muted";
-  extra.textContent = `${formatPercentile(p.percentile)} · ${formatGhgIntensity(p.ghgIntensity)}`;
+  extra.textContent = `${formatPercentile(p.percentile)}; ${formatGhgIntensity(p.ghgIntensity)}`;
   const link = document.createElement("a");
   link.href = `/schools/${p.slug}`;
   link.className = "link font-medium";
-  link.textContent = "View school →";
+  link.textContent = `View ${p.name}`;
   root.append(title, meta, stats, extra, link);
   return root;
 }
 
-export function SchoolMap({ points, metric, height = 560 }: { points: SchoolPoint[]; metric: MapMetric; height?: number }) {
+export function SchoolMap({ points, metric, height = 560, theme }: { points: SchoolPoint[]; metric: MapMetric; height?: number; theme: ResolvedTheme }) {
   const container = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
+  const colorsRef = useRef<ChartColors | null>(null);
   const latest = useRef({ points, metric });
   latest.current = { points, metric };
   const data = useMemo(() => toGeoJson(points, metric), [points, metric]);
 
   useEffect(() => {
     if (!container.current) return;
+    const colors = readThemeColors();
+    colorsRef.current = colors;
     const map = new MapLibreMap({
       container: container.current,
-      style: STYLE_URL,
+      style: STYLE_URLS[theme],
       center: ONTARIO_CENTER,
       zoom: 4.6,
       attributionControl: { compact: true },
@@ -92,11 +106,11 @@ export function SchoolMap({ points, metric, height = 560 }: { points: SchoolPoin
         source: "schools",
         filter: ["has", "point_count"],
         paint: {
-          "circle-color": "#047857",
-          "circle-opacity": 0.8,
+          "circle-color": colors.accent,
+          "circle-opacity": 0.85,
           "circle-radius": ["step", ["get", "point_count"], 14, 25, 18, 100, 24, 500, 30],
           "circle-stroke-width": 2,
-          "circle-stroke-color": "#ffffff",
+          "circle-stroke-color": colors.surface,
         },
       });
       map.addLayer({
@@ -105,7 +119,7 @@ export function SchoolMap({ points, metric, height = 560 }: { points: SchoolPoin
         source: "schools",
         filter: ["has", "point_count"],
         layout: { "text-field": ["get", "point_count_abbreviated"], "text-size": 12, "text-font": ["Noto Sans Regular"] },
-        paint: { "text-color": "#ffffff" },
+        paint: { "text-color": colors.accentContrast },
       });
       map.addLayer({
         id: "schools",
@@ -114,10 +128,10 @@ export function SchoolMap({ points, metric, height = 560 }: { points: SchoolPoin
         filter: ["!", ["has", "point_count"]],
         paint: {
           // @ts-expect-error MapLibre's expression typing does not model runtime-built step expressions.
-          "circle-color": colorExpression(currentMetric, current),
+          "circle-color": colorExpression(currentMetric, current, colors),
           "circle-radius": ["interpolate", ["linear"], ["zoom"], 6, 4, 12, 8],
           "circle-stroke-width": 1,
-          "circle-stroke-color": "#ffffff",
+          "circle-stroke-color": colors.surface,
         },
       });
 
@@ -148,15 +162,16 @@ export function SchoolMap({ points, metric, height = 560 }: { points: SchoolPoin
       map.remove();
       mapRef.current = null;
     };
-  }, []);
+  }, [theme]);
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !map.isStyleLoaded()) return;
+    const colors = colorsRef.current;
+    if (!map || !colors || !map.isStyleLoaded()) return;
     (map.getSource("schools") as GeoJSONSource | undefined)?.setData(data);
     if (map.getLayer("schools")) {
       // @ts-expect-error see above
-      map.setPaintProperty("schools", "circle-color", colorExpression(metric, points));
+      map.setPaintProperty("schools", "circle-color", colorExpression(metric, points, colors));
     }
   }, [data, metric, points]);
 

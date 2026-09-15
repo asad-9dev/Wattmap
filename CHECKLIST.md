@@ -27,7 +27,9 @@ Status as of 2026-09-15. ✅ done and verified · 🟡 done, awaiting an externa
 - ✅ Homepage, search API + autocomplete, /schools, school profile, methodology, data, about
 
 ## Phase 4 — Exploration
-- ✅ Map (clustered MapLibre), compare, board profiles and index, Ontario overview
+- ✅ Map (clustered MapLibre, filters, mini-cards), compare (EUI and GHG trend switch), board profiles with filterable/sortable school table, board index, Ontario overview
+- ✅ About page and Eco Club toolkit (`/toolkit`)
+- ✅ Light / dark / system theme switch across pages, charts, and map
 
 ## Phase 5 — Reports
 - ✅ Printable report page (print stylesheet, SVG charts)

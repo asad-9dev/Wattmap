@@ -84,7 +84,7 @@ export function SearchBox({ size = "large", autoFocus = false }: { size?: "large
       <label htmlFor={`${listId}-input`} className="sr-only">
         Search a school, city, or school board
       </label>
-      <div className={`flex items-center gap-2 rounded-md border border-line bg-white ${large ? "px-4 py-3" : "px-3 py-2"} focus-within:border-accent`}>
+      <div className={`flex items-center gap-2 rounded-md border border-line bg-surface ${large ? "px-4 py-3" : "px-3 py-2"} focus-within:border-accent`}>
         <Search size={large ? 20 : 16} className="shrink-0 text-ink-faint" aria-hidden="true" />
         <input
           id={`${listId}-input`}
@@ -109,7 +109,7 @@ export function SearchBox({ size = "large", autoFocus = false }: { size?: "large
         />
       </div>
       {showList && (
-        <div id={listId} role="listbox" className="absolute z-30 mt-1 max-h-[70vh] w-full overflow-y-auto rounded-md border border-line bg-white py-1 shadow-lg">
+        <div id={listId} role="listbox" className="absolute z-30 mt-1 max-h-[70vh] w-full overflow-y-auto rounded-md border border-line bg-surface py-1 shadow-lg">
           {status === "error" && <p className="px-4 py-3 text-sm text-ink-muted">Search is temporarily unavailable.</p>}
           {status !== "error" && options.length === 0 && (
             <p className="px-4 py-3 text-sm text-ink-muted">{status === "loading" ? "Searching…" : "No matching schools, cities, or boards."}</p>
