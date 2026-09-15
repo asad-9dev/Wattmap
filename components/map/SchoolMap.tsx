@@ -62,12 +62,13 @@ function popupContent(p: SchoolPoint): HTMLElement {
   const root = document.createElement("div");
   root.className = "space-y-1 text-[13px] leading-5";
   const title = document.createElement("p");
-  title.className = "font-semibold";
+  title.className = "font-semibold text-ink";
   title.textContent = p.name;
   const meta = document.createElement("p");
   meta.className = "text-ink-muted";
   meta.textContent = p.city ? `${p.boardName}, ${p.city}` : p.boardName;
   const stats = document.createElement("p");
+  stats.className = "text-ink";
   stats.textContent = `EUI ${formatEui(p.eui)}. ${p.score !== null ? `Score ${p.score} of 100.` : "No score."}`;
   const extra = document.createElement("p");
   extra.className = "text-ink-muted";

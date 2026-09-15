@@ -196,20 +196,75 @@
   }
 }
 
-/* MapLibre popups and controls follow the theme. */
-.maplibregl-popup-content {
+/*
+ * MapLibre popups and controls follow the theme. maplibre-gl.css loads after this file (with the
+ * map, on demand) and uses equally specific selectors, so every override here is scoped under
+ * .maplibregl-map or .dark to win on specificity rather than on load order.
+ */
+.maplibregl-map .maplibregl-popup-content {
   background: rgb(var(--c-surface));
   color: rgb(var(--c-ink));
-  border: 1px solid rgb(var(--c-line));
+  border: 1px solid rgb(var(--c-line-strong));
   border-radius: 8px;
+  box-shadow: 0 8px 24px -8px rgb(var(--c-shadow) / 0.35);
+  padding: 12px 32px 12px 14px;
 }
 
-.maplibregl-popup-tip {
-  border-top-color: rgb(var(--c-surface)) !important;
-  border-bottom-color: rgb(var(--c-surface)) !important;
+/* The tip is a CSS triangle: only the border facing the popup is coloured. */
+.maplibregl-map .maplibregl-popup-anchor-top .maplibregl-popup-tip,
+.maplibregl-map .maplibregl-popup-anchor-top-left .maplibregl-popup-tip,
+.maplibregl-map .maplibregl-popup-anchor-top-right .maplibregl-popup-tip {
+  border-bottom-color: rgb(var(--c-surface));
 }
 
-.maplibregl-popup-close-button {
+.maplibregl-map .maplibregl-popup-anchor-bottom .maplibregl-popup-tip,
+.maplibregl-map .maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip,
+.maplibregl-map .maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip {
+  border-top-color: rgb(var(--c-surface));
+}
+
+.maplibregl-map .maplibregl-popup-anchor-left .maplibregl-popup-tip {
+  border-right-color: rgb(var(--c-surface));
+}
+
+.maplibregl-map .maplibregl-popup-anchor-right .maplibregl-popup-tip {
+  border-left-color: rgb(var(--c-surface));
+}
+
+.maplibregl-map .maplibregl-popup-close-button {
+  width: 28px;
+  height: 28px;
+  font-size: 18px;
+  line-height: 1;
+  color: rgb(var(--c-ink-muted));
+  border-radius: 0 8px 0 6px;
+}
+
+.maplibregl-map .maplibregl-popup-close-button:hover {
+  color: rgb(var(--c-ink));
+  background-color: rgb(var(--c-ink) / 0.08);
+}
+
+/* Zoom buttons and attribution: dark surfaces with inverted (light) icons in dark mode. */
+.dark .maplibregl-ctrl-group {
+  background: rgb(var(--c-surface));
+  box-shadow: 0 0 0 1px rgb(var(--c-line-strong));
+}
+
+.dark .maplibregl-ctrl-group button + button {
+  border-top-color: rgb(var(--c-line-strong));
+}
+
+.dark .maplibregl-ctrl button .maplibregl-ctrl-icon {
+  filter: invert(1);
+}
+
+.dark .maplibregl-ctrl.maplibregl-ctrl-attrib {
+  background: rgb(var(--c-surface) / 0.85);
+  color: rgb(var(--c-ink-muted));
+}
+
+.dark .maplibregl-ctrl-attrib a {
   color: rgb(var(--c-ink-muted));
 }
 
