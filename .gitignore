@@ -29,6 +29,9 @@ playwright-report/
 # local tooling (machine-specific paths)
 .claude/
 
+# generated before dev/build from node_modules (scripts/copy-maplibre-worker.mjs)
+public/maplibre/
+
 # misc
 .DS_Store
 Thumbs.db

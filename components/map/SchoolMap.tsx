@@ -1,7 +1,7 @@
 "use client";
 
 import "maplibre-gl/dist/maplibre-gl.css";
-import { Map as MapLibreMap, NavigationControl, Popup, type GeoJSONSource, type MapLayerMouseEvent } from "maplibre-gl";
+import { Map as MapLibreMap, NavigationControl, Popup, setWorkerUrl, type GeoJSONSource, type MapLayerMouseEvent } from "maplibre-gl";
 import { useEffect, useMemo, useRef } from "react";
 import { readThemeColors, type ChartColors } from "@/components/theme/useTheme";
 import { formatEui, formatGhgIntensity, formatPercentile } from "@/lib/format";
@@ -22,6 +22,11 @@ export type SchoolPoint = {
   level?: string | null;
   region?: string | null;
 };
+
+// MapLibre decodes tiles in a module worker that the Next.js bundle does not include; without
+// this, the map loads its style but never draws tiles or markers. The files are copied to
+// public/maplibre/ before every dev/build run (scripts/copy-maplibre-worker.mjs).
+setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
 
 // OpenFreeMap serves OpenStreetMap vector tiles without an API key; override per deployment.
 const STYLE_URLS: Record<ResolvedTheme, string> = {
@@ -157,6 +162,10 @@ export function SchoolMap({ points, metric, height = 560, theme }: { points: Sch
         map.on("mouseenter", layer, () => (map.getCanvas().style.cursor = "pointer"));
         map.on("mouseleave", layer, () => (map.getCanvas().style.cursor = ""));
       }
+      // "idle" fires once tiles and markers have actually rendered, which needs a working worker.
+      map.once("idle", () => {
+        if (container.current) container.current.dataset.mapState = "ready";
+      });
     });
     return () => {
       map.remove();

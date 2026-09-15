@@ -44,10 +44,25 @@ test("filter schools by level", async ({ page }) => {
   await expectNoHorizontalOverflow(page);
 });
 
+test("map worker is served as JavaScript", async ({ request }) => {
+  for (const file of ["maplibre-gl-worker.mjs", "maplibre-gl-shared.mjs"]) {
+    const response = await request.get(`/maplibre/${file}`);
+    expect(response.status()).toBe(200);
+    expect(response.headers()["content-type"]).toMatch(/javascript/);
+  }
+});
+
 test("map loads schools and offers a text alternative", async ({ page }) => {
+  const moduleErrors: string[] = [];
+  page.on("console", (message) => {
+    if (message.type() === "error" && /module script|MIME type/i.test(message.text())) moduleErrors.push(message.text());
+  });
   await page.goto("/map");
   await expect(page.getByText(/[\d,]+ schools shown/)).toBeVisible({ timeout: 30_000 });
   await expect(page.locator("canvas.maplibregl-canvas")).toBeVisible();
+  // "ready" is set only after tiles and markers render, which requires MapLibre's worker to run.
+  await expect(page.locator('[data-map-state="ready"]')).toBeVisible({ timeout: 30_000 });
+  expect(moduleErrors).toEqual([]);
   await expect(page.getByText("Cluster (select to zoom)")).toBeVisible();
   await page.getByLabel("School level").selectOption("secondary");
   await expect(page.getByText(/[\d,]+ schools shown/)).toBeVisible();
